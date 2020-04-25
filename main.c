@@ -23,7 +23,7 @@
         PRINTF(a.y);                             \
     }
 
-#define OPERATOR_PLUS(x, y) x + y
+#define OPERATOR_PLUS(x, y) ((x) + (y))
 #define PRINT_DOUBLE(x) printf("%lf", x)
 #define PRINT_INT(x) printf("%d", x)
 
