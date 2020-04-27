@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define def_vec(name, T, ADD, PRINTF, DELIMITER, \
-    sum, print)                                  \
+#define def_vec(name, T, ADD, PRINTF, DELIMITER) \
     typedef struct {                             \
         T x;                                     \
         T y;                                     \
     } name;                                      \
                                                  \
-    name sum(name a, name b)                     \
+    name sum_##name(name a, name b)              \
     {                                            \
         name c;                                  \
         c.x = ADD(a.x, b.x);                     \
@@ -16,7 +15,7 @@
         return c;                                \
     }                                            \
                                                  \
-    void print(name a)                           \
+    void print_##name(name a)                    \
     {                                            \
         PRINTF(a.x);                             \
         printf(DELIMITER);                       \
@@ -27,45 +26,33 @@
 #define PRINT_DOUBLE(x) printf("%lf", x)
 #define PRINT_INT(x) printf("%d", x)
 
-def_vec(Vectord, double, OPERATOR_PLUS, PRINT_DOUBLE, " ", sum_vectord, print_vectord);
-def_vec(Vector, int, OPERATOR_PLUS, PRINT_INT, " ", sum_vector, print_vector);
-def_vec(Mat, Vector, sum_vector, print_vector, "\n", sum_mat, print_mat);
+def_vec(Vectord, double, OPERATOR_PLUS, PRINT_DOUBLE, " ");
+def_vec(Vector, int, OPERATOR_PLUS, PRINT_INT, " ");
+def_vec(Mat, Vector, sum_Vector, print_Vector, "\n");
 
 int main()
 {
     // doubleのvector
-    Vectord a;
-    a.x = 2.0;
-    a.y = 1.0;
-    Vectord b;
-    b.x = 4.0;
-    b.y = -5.0;
-    Vectord c = sum_vectord(a, b);
+    Vectord a = {2.0, 1.0};
+    Vectord b = {4.0, -5.0};
+    Vectord c = sum_Vectord(a, b);
     printf("c = \n");
-    print_vectord(c);
+    print_Vectord(c);
     printf("\n\n");
 
     // intのvector
-    Vector v1;
-    v1.x = 1;
-    v1.y = 2;
-    Vector v2;
-    v2.x = 5;
-    v2.y = 7;
-    Vector v3 = sum_vector(v1, v2);
+    Vector v1 = {1, 2};
+    Vector v2 = {5, 7};
+    Vector v3 = sum_Vector(v1, v2);
     printf("v3 = \n");
-    print_vector(v3);
+    print_Vector(v3);
     printf("\n\n");
 
     // vector<int>のvector
-    Mat M1;
-    M1.x = v1;
-    M1.y = v2;
-    Mat M2;
-    M2.x = v2;
-    M2.y = v1;
-    Mat M3 = sum_mat(M1, M2);
+    Mat M1 = {v1, v2};
+    Mat M2 = {v2, v1};
+    Mat M3 = sum_Mat(M1, M2);
     printf("M3 = \n");
-    print_mat(M3);
+    print_Mat(M3);
     printf("\n\n");
 }
